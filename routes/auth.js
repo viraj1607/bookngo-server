@@ -1,17 +1,16 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const auth = require('../middleware/auth');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const auth = require("../middleware/auth");
 
-
-router.post('/signup', async (req, res) => {
+router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
     let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ msg: 'User already exists' });
+    if (user) return res.status(400).json({ msg: "User already exists" });
 
     user = new User({ name, email, password });
 
@@ -21,46 +20,71 @@ router.post('/signup', async (req, res) => {
     await user.save();
 
     const payload = { user: { id: user.id } };
-    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
-      if (err) throw err;
-      res.json({ token });
-    });
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: 3600 },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 
-
-router.post('/signin', async (req, res) => {
+router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
   try {
     let user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: 'Invalid credentials' });
+    if (!user) return res.status(400).json({ msg: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
     const payload = { user: { id: user.id } };
-    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
-      if (err) throw err;
-      res.json({ token });
-    });
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: 3600 },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 
+router.post("/validate", (req, res) => {
+  const { token } = req.body;
 
-router.get('/', auth, async (req, res) => {
+  if (!token) {
+    return res.status(400).json({ valid: false });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ valid: false });
+    }
+
+    // Optionally, check if the user still exists in the database
+    res.json({ valid: true });
+  });
+});
+
+router.get("/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select("-password");
     res.json(user);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send("Server error");
   }
 });
 
