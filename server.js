@@ -16,6 +16,7 @@ app.use(express.json({ extended: false }));
 // Define Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/hotels',require('./routes/hotel'))
+app.use('/api/flights',require('./routes/flight'))
 
 const PORT = 5000;
 
