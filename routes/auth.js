@@ -88,4 +88,31 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+router.put('/', auth, async (req, res) => {
+  const { name, gender, address, province, pincode, mobile, email } = req.body;
+
+  // Build user object
+  const userFields = { name, gender, address, province, pincode, mobile, email };
+
+  try {
+    let user = await User.findById(req.user.id);
+
+    if (user) {
+      // Update
+      user = await User.findByIdAndUpdate(
+        req.user.id,
+        { $set: userFields },
+        { new: true }
+      );
+
+      return res.json(user);
+    }
+
+    res.status(400).json({ msg: 'User not found' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
