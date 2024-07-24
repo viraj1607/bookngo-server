@@ -30,7 +30,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get('/api/hotels/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
