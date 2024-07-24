@@ -23,4 +23,17 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/api/flights", async (req, res) => {
+  const { from, to } = req.query;
+
+  try {
+    const flights = await Flight.find({ from: from, to: to });
+
+    res.json(flights);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
