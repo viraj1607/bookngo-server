@@ -5,7 +5,7 @@ const hotelSchema = new mongoose.Schema({
   address: String,
   price: Number,
   reviews: Number,
-  landmark: String,
+  nearby: String,
   city: String,
   province: String,
   amenities: Array,
