@@ -47,4 +47,20 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/random/:city', async (req, res) => {
+  const { city } = req.params;
+
+  try {
+    const hotels = await Hotel.aggregate([
+      { $match: { city: city } },
+      { $sample: { size: 4 } }
+    ]);
+
+    res.json(hotels);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;
