@@ -5,7 +5,9 @@ const app = express();
 require('dotenv').config();
 
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:3000", // Replace with your React app's URL
+  }));
 
 // Connect Database
 connectDB();
