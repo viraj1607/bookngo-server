@@ -5,7 +5,13 @@ const app = express();
 require('dotenv').config();
 
 
-app.use(cors());
+const corsOptions = {
+    origin: 'https://bookandgo-mg7di44sk-viraj1607s-projects.vercel.app', // Replace with your Vercel domain
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type,Authorization'
+  };
+  
+  app.use(cors(corsOptions));
 
 // Connect Database
 connectDB();
