@@ -6,7 +6,7 @@ require('dotenv').config();
 
 
 const corsOptions = {
-    origin: 'https://bookandgo-mg7di44sk-viraj1607s-projects.vercel.app', // Replace with your Vercel domain
+    origin: 'https://bookandgo.vercel.app/', // Replace with your Vercel domain
     methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
   };
