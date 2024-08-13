@@ -4,16 +4,8 @@ const cors = require("cors");
 const app = express();
 require("dotenv").config();
 
-const options = [
-  cors({
-    origin: "*",
-    methods: "*",
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  }),
-];
 
-app.use(options);
+app.use(cors());
 
 // Connect Database
 connectDB();
