@@ -5,14 +5,17 @@ const app = express();
 require('dotenv').config();
 
 
-const corsOptions = {
-    origin: 'https://bookandgo.vercel.app', // Replace with your Vercel domain
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type,Authorization'
-  };
+const options = [
+    cors({
+      origin: '*',
+      methods: '*',
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
+    })
+  ];
   
   app.use(express.json({ extended: false }));
-  app.use(cors(corsOptions));
+  app.use(options);
 
 // Connect Database
 connectDB();
